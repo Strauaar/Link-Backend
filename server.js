@@ -38,7 +38,7 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT (number) DO NOTHING;', [number], (err, res) => {
+  db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT ON CONSTRAINT number DO NOTHING;', [number], (err, res) => {
     if (err) throw err;
     client.end();
   });
