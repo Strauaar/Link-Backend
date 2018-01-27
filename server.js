@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/sms', (req, res) => {
-  console.log(req.body.body);
+  console.log(req.body.Body);
   let twiml = new MessagingResponse();
   twiml.message('The Robots are coming! Head for the hills!');
 
