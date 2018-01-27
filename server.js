@@ -6,6 +6,10 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 const app = express();
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
 // client.messages.create(
 //   {
