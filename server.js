@@ -38,10 +38,10 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  // db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT DO NOTHING;', [number], (err, res) => {
-  //   if (err) throw err;
-  //   client.end();
-  // });
+  db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT DO NOTHING;', [number], (err, res) => {
+    if (err) throw err;
+    client.end();
+  });
 
   // console.log(req);
   let twiml = new MessagingResponse();
