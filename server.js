@@ -1,5 +1,6 @@
 import { ACCOUNT_SID, AUTH_TOKEN } from './api_keys.js';
 import express from 'express';
+import bodyParser from 'body-parser';
 
 const http = require('http');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
