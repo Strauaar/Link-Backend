@@ -9,12 +9,12 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 const app = express();
-// const client = new Client({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: true
-// });
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+});
 
-// client.connect();
+client.connect();
 
 app.use(bodyParser.urlencoded({
   extended: true
