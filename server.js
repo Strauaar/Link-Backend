@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/sms', (req, res) => {
+  console.log(process.env.DATABASE_URL);
   const body = req.body.Body
   let twiml = new MessagingResponse();
 
