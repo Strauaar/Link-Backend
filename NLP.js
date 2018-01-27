@@ -6,7 +6,6 @@ class NLP{
     this.KEY = "AIzaSyCL71w0JZohA6wO2PAXFEb9PJN6_vTs3oA";
   }
 
-
   sendReq(){
     const client = new language.LanguageServiceClient();
 
@@ -25,7 +24,8 @@ class NLP{
   parseService(){
     this.sendReq()
     .then(response =>{
-      console.log(response[0].entities[0].name);
+      const entities = response[0].entities.map(entity => entity.name);
+      return entities;
     });
   }
 }
