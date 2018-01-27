@@ -24,6 +24,7 @@
     "babel-preset-es2015": "^6.24.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
+    "pg": "7.4.1",
     "twilio": "^3.11.1"
   }
 }
