@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/sms', (req, res) => {
-  console.log(req);
+  console.log(req.body.body);
   let twiml = new MessagingResponse();
   twiml.message('The Robots are coming! Head for the hills!');
 
@@ -26,13 +26,6 @@ app.post('/sms', (req, res) => {
   res.end(twiml.toString());
 });
 
-app.post('/error', (req,res) => {
-  let twiml = new MessagingResponse();
-  twiml.message('Sorry, there is an error with our service. Please try again later.');
-
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(twiml.toString());
-});
 
 http.createServer(app).listen(process.env.PORT || 1337, () => {
   console.log('Express server is listening...');
