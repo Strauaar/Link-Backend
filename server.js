@@ -12,31 +12,27 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
-// client.messages.create(
-//   {
-//     to: '+16502554232',
-//     from: '+15109996129',
-//     body: 'yo',
-//   },
-//   (err, message) => {
-//     console.log(message.sid);
-//   }
-// );
-
 app.get('/', (req, res) => {
   res.send('hi');
 });
 
 
 app.post('/sms', (req, res) => {
-  console.log(req);
-  const twiml = new MessagingResponse();
+  let twiml = new MessagingResponse();
   twiml.message('The Robots are coming! Head for the hills!');
 
   res.writeHead(200, {'Content-Type': 'text/xml'});
   res.end(twiml.toString());
 });
 
+app.post('/error', (req,res) => {
+  let twiml = new MessagingResponse();
+  twiml.message('Sorry, there is an error with our service. Please try again later.');
+
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
+});
+
 http.createServer(app).listen(process.env.PORT || 1337, () => {
-  console.log('Express server listening on port 1337');
+  console.log('Express server is listening...');
 });
