@@ -7,6 +7,31 @@ class GoogleMap {
     this.address = address;
   }
 
+  validAddress() {
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.address}&key=AIzaSyDQMiVYKqb3VfNq8dP3C_sXxChtimg9zB8`
+    let body = '';
+
+    let promise = new Promise((resolve, reject) => {
+      let response;
+      https.get(url, resp => {
+        resp.on("data", data => {
+          body += data;
+        });
+        resp.on("end", () => {
+          body = JSON.parse(body);
+
+          if (body.status === "ZERO_RESULTS") {
+            response = false;
+          } else {
+            response = true;
+          }
+          resolve(response);
+        });
+      });
+    });
+    return promise;
+  }
+
   getText() {
     let query = "homeless" + this.type;
     let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}s&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
@@ -39,6 +64,7 @@ class GoogleMap {
 
 
 
-let g = new GoogleMap("shelter", "587 eddy st sf");
+let g = new GoogleMap("shelter", "5asdf87 edasdfdy st sf");
 console.log(g);
+g.validAddress().then(res => console.log(res));
 g.getText().then(res => console.log(res));
