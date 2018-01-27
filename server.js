@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.post(process.env.SMS_REPLY, (req, res) => {
+app.post('/sms', (req, res) => {
   console.log(req);
   const twiml = new MessagingResponse();
   twiml.message('The Robots are coming! Head for the hills!');
