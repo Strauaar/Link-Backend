@@ -1,26 +1,28 @@
 import { ACCOUNT_SID, AUTH_TOKEN } from './api_keys.js';
 import express from 'express';
 import bodyParser from 'body-parser';
-const { Client } = require('pg');
+import * as DBUtil from './db_util.js';
 const http = require('http');
+const https = require("https");
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const Converser = require("./converser.js");
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
+
 // client.messages
 //   .create({
-//     to: '+15558675310',
-//     from: '+15017122661',
+//     to: '+16502554232',
+//     from: '+15109996129',
 //     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
 //   })
 //   .then(message => console.log(message.sid));
 
 const app = express();
-const db = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true
-});
-
-db.connect();
+// const db = new Client({
+//   connectionString: process.env.DATABASE_URL,
+//   ssl: true
+// });
+//
+// db.connect();
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -30,38 +32,21 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('hi');
 });
-// 
-// function getInput(query){
-//   let converser = new Converser(query);
-//   converser.receiveText(input).then(response => {
-//     query = response;
-//     getInput(query);
-//   });
-// };
 
 app.post('/sms', (req, res) => {
   //text body
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date() ], (err, res) => {
-    if (err) throw err;
-    db.end();
-  });
-
-
+  DBUtil.newUser(number);
+  
   let twiml = new MessagingResponse();
-
   twiml.message('The Robots are coming! Head for the hills!');
 
   res.writeHead(200, {'Content-Type': 'text/xml'});
   res.end(twiml.toString());
 
 });
-
-const https = require("https");
-
-
 
 // Endpoint for web app to grab 20 shelters or soup kitchens in SF
 // :type should either be 'food' or 'shelter'
@@ -84,7 +69,6 @@ app.get('/locations/:type', function (req, res) {
   });
 });
 
-// Returns
 app.get('/location_detailed/:placeid', function (req, res) {
   let placeid = req.params.placeid;
   let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
@@ -126,7 +110,6 @@ app.get('/:type/:address', function (req, res) {
     });
   });
 });
-
 
 http.createServer(app).listen(process.env.PORT || 1337, () => {
   console.log('Express server is listening...');
