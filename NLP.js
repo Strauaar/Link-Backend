@@ -35,5 +35,3 @@ class NLP{
 }
 
 module.exports = NLP;
-// const post = new NLP("I am looking for a soup kitchen");
-// post.parseService();

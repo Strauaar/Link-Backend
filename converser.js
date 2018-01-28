@@ -2,30 +2,53 @@ const NLP = require('./NLP.js');
 const GoogleMap = require("./google_map");
 const Promise = require("es6-promise");
 
-const sampleTexts = "'I am looking for a homeless shelter' or  'I need drug counseling'";
+const sampleTexts = "'I am looking for a homeless shelter' or 'I need counseling'";
 
 // STATUSES
-const FILLING_QUERY = "FILLING_QUERY";
+const NEW_QUERY = "NEW_QUERY";
+const AWAIT_SERVICE = "AWAIT_SERVICE";
+const AWAIT_ADDRESS = "AWAIT_ADDRESS";
 const CONFIRMING_ADDRESS = "CONFIRMING_ADDRESS";
 const COMPLETED = "COMPLETED";
 
-const defaultQuery = {service: null, address: null, status: "FILLING_QUERY"};
+const newQuery = {service: null, address: null, status: NEW_QUERY};
 const nullUser = {address: null};
 
 class Converser{
-  constructor(query = defaultQuery, user = nullUser ){
+  constructor(query = newQuery, user = nullUser ){
     this.query = query;
     this.user = user;
-  }
-
-  receiveText(text){
-    if (!this.query.service){
-      return this.receiveService(text);
-    } else{
-      return this.receiveAddress(text);
+    //skip intro text for repeat users
+    if (user.address && this.query.status === NEW_QUERY){
+      this.query.status = AWAIT_SERVICE;
     }
   }
 
+  receiveText(text){
+    // user is new user
+    if (this.query.status === NEW_QUERY){
+      return this.sendIntroText();
+    } else if (this.query.status === AWAIT_SERVICE){
+      return this.receiveService(text);
+    } else if (this.query.status === AWAIT_ADDRESS){
+      return this.receiveAddress(text);
+    } else if (this.query.status === CONFIRMING_ADDRESS ){
+      return this.confirmAddress(text);
+      // should never get here
+    } else {
+      return this.sendIntroText();
+    }
+  }
+
+  sendIntroText(){
+    let promise = new Promise((resolve, reject) => {
+      const message = "Welcome to Link. How can we help you. You can try " + sampleTexts;
+      this.query.status = AWAIT_SERVICE;
+      resolve({query: this.query, message });
+    });
+    return promise;
+  }
+  
   receiveService(text){
     let message;
     let promise = new Promise((resolve, reject) => {
@@ -44,15 +67,18 @@ class Converser{
   }
 
   receiveAddress(text){
-    if (this.query.status === CONFIRMING_ADDRESS && text.includes("y")){
+    console.log(text);
+    this.query.address = text;
+    return this.fulfillQuery();
+  }
+
+  confirmAddress(text){
+    if (text.includes("y")){
       this.query.address = this.user.address;
-      return this.fulfillQuery();
-    } else if (this.query.status !== CONFIRMING_ADDRESS){
-      this.query.address = text;
       return this.fulfillQuery();
     } else { // user does not want to use cached address
       let promise = new Promise((resolve, reject) => {
-        this.query.status = FILLING_QUERY;
+        this.query.status = AWAIT_ADDRESS;
         const message = this.addressQuery(false);
         resolve({query: this.query, message});
       });
@@ -60,12 +86,15 @@ class Converser{
     }
   }
 
+
+
   addressQuery(useCachedAddress = true){
     let message;
     if (useCachedAddress && this.user.address){
       this.query.status = CONFIRMING_ADDRESS;
       message =  "I have your last location as: " + this.user.address + ". Is that still correct?";
     } else{
+      this.query.status = AWAIT_ADDRESS;
       message = "Where are you right now? (ex. 587 Eddy St. San Francisco)";
     }
     return message;
@@ -98,29 +127,3 @@ class Converser{
 }
 module.exports = Converser;
 
-  // receiveText(text){
-  //   let response;
-  //   let promise = new Promise((resolve, reject) => {
-  //     if (!this.query["service"]){
-  //       const parser = new NLP(text);
-  //       parser.parseService().then(entities => {
-  //         if (this.handleEntites(entities)){
-  //           response = "Where are you currently? (ex. 587 Eddy St.)";
-  //           // save to DB
-  //         } else{
-  //           response = "Sorry, I wasn't able to understand that. Try " + sampleTexts;
-  //         }
-  //         console.log(response);
-  //       });
-  //     } else{
-  //       this.query["address"] = text;
-  //       const googleMap = new GoogleMap(this.query.service, this.query.address);
-  //       googleMap.getText()
-  //         .then(console.log);
-  //       // response = this.lookupQuery(this.query.service, this.query.address);
-  //       // console.log(response);
-  //     }
-  //     resolve(this.query);
-  //   });
-  //   return promise;
-  // }
