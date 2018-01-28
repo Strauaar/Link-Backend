@@ -80,7 +80,7 @@ app.post('/sms', (req, res) => {
         let toSend = data.message;
         let newQuery = data.query;
         let twiml = new MessagingResponse();
-        const { service, address, status } = converser.query;
+        const { service, address, status } = newQuery;
         db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
           .catch(e => console.error(e.stack))
         twiml.message(toSend);
