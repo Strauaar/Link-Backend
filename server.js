@@ -73,7 +73,7 @@ app.get('/locations/:type', function (req, res) {
     });
     resp.on("end", () => {
       body = JSON.parse(body);
-      res.json(body.results.length);
+      res.json(body.results);
     });
   });
 });
