@@ -39,9 +39,9 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   const number = req.body.From;
 
-  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
-    .then(res => {})
-    .catch(e => console.error(e.stack));
+  // db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
+  //   .then(res => {})
+  //   .catch(e => console.error(e.stack));
 
   // db.query('SELECT * FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
   //   if (err) {
