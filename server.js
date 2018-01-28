@@ -42,16 +42,15 @@ app.post('/sms', (req, res) => {
   const number = req.body.From;
 
   //insert new user
-  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date() ], (err, res) => {
-    if (err) throw err;
-
-    // db.query('SELECT id FROM users WHERE ')
-    console.log(res);
-    // db.end();
-  });
+  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
+    .then(res => {
+      // db.query('SELECT id FROM users WHERE ')
+      console.log(res);
+    })
+    .catch(e => console.error(e.stack);)
 
   //get status
-  db.query('SELECT id,status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
+  db.query('SELECT users.id,status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
     if (err) throw err
     if (res.rows.length === 0) {
       db.query('')
