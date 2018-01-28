@@ -46,20 +46,20 @@ app.post('/sms', (req, res) => {
     if (err) {
       throw err
     } else if (res.rows.length === 0) {
-      let converser = new Converser();
-      converser.receiveText(body)
-      .then(res => {
-        let toSend = res.message;
-        let newQuery = res.query;
-        const { service, address, status } = converser.query;
-        db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
-        .catch(e => console.error(e.stack))
-        let twiml = new MessagingResponse();
-        twiml.message(toSend);
-        res.writeHead(200, {'Content-Type': 'text/xml'});
-        res.end(twiml.toString());
-      })
-      .catch(e => console.error(e.stack))
+      // let converser = new Converser();
+      // converser.receiveText(body)
+      // .then(res => {
+      //   let toSend = res.message;
+      //   let newQuery = res.query;
+      //   const { service, address, status } = converser.query;
+      //   db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
+      //   .catch(e => console.error(e.stack))
+      //   let twiml = new MessagingResponse();
+      //   twiml.message(toSend);
+      //   res.writeHead(200, {'Content-Type': 'text/xml'});
+      //   res.end(twiml.toString());
+      // })
+      // .catch(e => console.error(e.stack))
     } else {
       let row = res.row[0]
       let query = {row['service'], row['address'], row['status']};
