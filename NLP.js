@@ -26,7 +26,8 @@ class NLP{
     this.sendReq()
       .then(
         response =>{
-        let entities = response[0].entities.map(entity => entity.name);
+          let entities = response[0].entities.map(entity => entity.name);
+          console.log(entities);
         resolve(entities);
       },
       errors => reject(errors));

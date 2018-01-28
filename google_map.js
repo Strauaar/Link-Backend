@@ -8,8 +8,10 @@ class GoogleMap {
   }
 
   getText() {
-    let query = "homeless" + this.type;
-    let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}s&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
+    let query = "homeless " + this.type.join(" ");
+    console.log(query);
+    // let query = this.type;
+    let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}&key=AIzaSyCL71w0JZohA6wO2PAXFEb9PJN6_vTs3oA`;
     let body = '';
 
     let promise = new Promise( (resolve, reject) => {
@@ -24,10 +26,14 @@ class GoogleMap {
           if (body.status === "ZERO_RESULTS") {
             response = "No results found";
           } else {
-            let nearest = body.results[0];
-            let second = body.results[1];
-            let third = body.results[2];
-            response = `Nearest ${this.type} are ${nearest.name} at ${nearest.formatted_address}; ${second.name} at ${second.formatted_address}; and ${third.name} at ${third.formatted_address}`;
+            // let nearest = body.results[0];
+            // let second = body.results[1];
+            // let third = body.results[2];
+            // response = `Nearest ${this.type} are ${nearest.name} at ${nearest.formatted_address}; ${second.name} at ${second.formatted_address}; and ${third.name} at ${third.formatted_address}`;
+            const results = body.results.slice(0,3);
+            const resultsString = results.map(result => (`${result.name} at ${result.formatted_address}`))
+              .join("; ");
+            response = `Nearest ${this.type} are ${resultsString}`;
           }
           resolve(response);
         });
@@ -37,7 +43,7 @@ class GoogleMap {
   }
 }
 
-
+module.exports = GoogleMap;
 
 // let g = new GoogleMap("shelter", "587 eddy st sf");
 // console.log(g);
