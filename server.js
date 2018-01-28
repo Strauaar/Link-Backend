@@ -49,8 +49,7 @@ app.post('/sms', (req, res) => {
           console.log(res);
         });
 
-    });
-
+    })
     .catch(e => console.error(e.stack))
 
   //get status
