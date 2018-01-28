@@ -64,7 +64,7 @@ app.post('/sms', (req, res) => {
       })
       .catch(e => console.error(e.stack))
     } else {
-      let row = r.row[0];
+      let row = r.rows[0];
       let query = {row['service'], row['address'], row['status']};
       let converser = new Converser(query);
       converser.receiveText(body)
