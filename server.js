@@ -8,6 +8,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const Converser = require("./converser.js");
 const defaultQuery = {service: null, address: null};
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
+var fs = require('fs');
+
 
 // client.messages
 //   .create({
@@ -135,7 +137,6 @@ app.get('/setup', (req, res) => {
       });
     });
   });
-  res.send('setup')
 })
 
 app.get('/location_detailed/:placeid', function (req, res) {
