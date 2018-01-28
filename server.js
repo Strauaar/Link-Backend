@@ -1,7 +1,6 @@
 import { ACCOUNT_SID, AUTH_TOKEN, GOOGLE_API_KEY } from './api_keys.js';
 import express from 'express';
 import bodyParser from 'body-parser';
-// import * as DBUtil from './db_util.js';
 const http = require('http');
 const https = require("https");
 const { Client } = require('pg');
@@ -40,6 +39,7 @@ app.post('/sms', (req, res) => {
   const number = req.body.From;
 
   db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
+    .then(res => {})
     .catch(e => console.error(e.stack));
 
   db.query('SELECT * FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
