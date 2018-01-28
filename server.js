@@ -40,35 +40,35 @@ app.post('/sms', (req, res) => {
   const number = req.body.From;
 
   db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
-    .then(res => {})
+    .then(() => {})
     .catch(e => console.error(e.stack));
 
-  db.query('SELECT * FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
+  db.query('SELECT * FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, r) => {
     if (err) {
       throw err
-    } else if (res.rows.length === 0) {
-      // let converser = new Converser();
-      // converser.receiveText(body)
-      // .then(res => {
-      //   let toSend = res.message;
-      //   let newQuery = res.query;
-      //   const { service, address, status } = converser.query;
-      //   db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
-      //   .catch(e => console.error(e.stack))
-      //   let twiml = new MessagingResponse();
-      //   twiml.message(toSend);
-      //   res.writeHead(200, {'Content-Type': 'text/xml'});
-      //   res.end(twiml.toString());
-      // })
-      // .catch(e => console.error(e.stack))
+    } else if (r.rows.length === 0) {
+      let converser = new Converser();
+      converser.receiveText(body)
+      .then(data => {
+        let toSend = data.message;
+        let newQuery = data.query;
+        const { service, address, status } = converser.newQuery;
+        db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
+        .catch(e => console.error(e.stack));
+        let twiml = new MessagingResponse();
+        twiml.message(toSend);
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
+      })
+      .catch(e => console.error(e.stack))
     } else {
-      // let row = res.row[0];
+      // let row = r.row[0];
       // let query = {row['service'], row['address'], row['status']};
       // let converser = new Converser(query);
       // converser.receiveText(body)
-      // .then(res => {
-      //   let toSend = res.message;
-      //   let newQuery = res.query;
+      // .then(data => {
+      //   let toSend = data.message;
+      //   let newQuery = data.query;
       //   let twiml = new MessagingResponse();
       //   const { service, address, status } = converser.query;
       //   db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
