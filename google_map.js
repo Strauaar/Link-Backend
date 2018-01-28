@@ -35,8 +35,7 @@ class GoogleMap {
     });
     return promise;
   }
-}
-
+};
 
 
 // let g = new GoogleMap("shelter", "587 eddy st sf");

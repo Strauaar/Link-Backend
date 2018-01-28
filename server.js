@@ -1,7 +1,6 @@
 import { ACCOUNT_SID, AUTH_TOKEN } from './api_keys.js';
 import express from 'express';
 import bodyParser from 'body-parser';
-
 const { Client } = require('pg');
 const http = require('http');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -38,7 +37,7 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT (number) DO NOTHING;', [number], (err, res) => {
+  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date() ], (err, res) => {
     if (err) throw err;
     db.end();
   });
