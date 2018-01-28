@@ -40,7 +40,7 @@ app.post('/sms', (req, res) => {
   const number = req.body.From;
   db.query('INSERT INTO users (number) VALUES ($1) ON CONFLICT (number) DO NOTHING;', [number], (err, res) => {
     if (err) throw err;
-    client.end();
+    db.end();
   });
 
   // console.log(req);
