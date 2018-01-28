@@ -119,10 +119,10 @@ app.get('/locations/:type', function (req, res) {
   });
 });
 
-app.get('/setup', function(){
+app.get('/setup', (req, res) => {
   const api_url = process.env.PROCCESS_KEY_URL;
   let body = '';
-  http.get(url, resp => {
+  https.get(url, resp => {
     resp.on("data", data => {
       body += data;
     });
@@ -135,6 +135,7 @@ app.get('/setup', function(){
       });
     });
   });
+  res.send('setup')
 })
 
 app.get('/location_detailed/:placeid', function (req, res) {
