@@ -25,36 +25,24 @@ class Converser{
   }
 
   receiveText(text){
+    const that = this;
     const actions = {
-      NEW_QUERY: this.sendIntroText,
-      AWAIT_SERVICE: this.receiveService,
-      AWAIT_ADDRESS: this.receiveAddress,
-      CONFIRMING_ADDRESS: this.confirmAddress
+      NEW_QUERY: this.sendIntroText.bind(that),
+      AWAIT_SERVICE: this.receiveService.bind(that),
+      AWAIT_ADDRESS: this.receiveAddress.bind(that),
+      CONFIRMING_ADDRESS: this.confirmAddress.bind(that),
     };
     if (this.checkForTriggers(text)){
       return this.handleTrigger();
     } 
-    const status = this.query.status;
-    if (status){
-      return actions[status](text);
+    const action = actions[this.query.status];
+    if (action){
+      return action(text);
     } else{
       return this.sendIntroText();
     }
-    //   else if (this.query.status === NEW_QUERY){
-    //   return this.sendIntroText();
-    // } else if (this.query.status === AWAIT_SERVICE){
-    //   return this.receiveService(text);
-    // } else if (this.query.status === AWAIT_ADDRESS){
-    //   return this.receiveAddress(text);
-    // } else if (this.query.status === CONFIRMING_ADDRESS ){
-    //   return this.confirmAddress(text);
-      // should never get here
-    // } else {
-    //   return this.sendIntroText();
-    // }
   }
   checkForTriggers(text){
-    console.log(text);
     const triggers = ["suicide", "death", "dead", "kill", " die "];
     return triggers.some(trigger => (
       text.includes(trigger)
