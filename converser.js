@@ -2,8 +2,8 @@ const NLP = require('./NLP.js');
 const GoogleMap = require("./google_map");
 const Promise = require("es6-promise");
 
-const sampleTexts = "'I am looking for a homeless shelter' or 'I need a free clinic'";
-// STATUSES 
+const sampleTexts = "'I am looking for a homeless shelter' or  'I need drug counseling'";
+// STATUSES
 const FILLING_QUERY = "FILLING_QUERY";
 const CONFIRMING_ADDRESS = "CONFIRMING_ADDRESS";
 
@@ -14,7 +14,9 @@ class Converser{
     this.query = query;
     this.user = user;
   }
-  
+
+
+
   receiveText(text){
     if (this.query === defaultQuery){
       return this.receiveService(text);

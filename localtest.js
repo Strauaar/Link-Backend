@@ -16,6 +16,6 @@ function getInput(query){
     });
   });
 }
-getInput();
 
-// export GOOGLE_APPLICATION_CREDENTIALS=/"/Users/julian/Desktop/hackathon/service_key.json" 
+
+// export GOOGLE_APPLICATION_CREDENTIALS=/"/Users/julian/Desktop/hackathon/service_key.json"
