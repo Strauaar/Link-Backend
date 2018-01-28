@@ -19,7 +19,8 @@ class Converser{
     this.query = query;
     this.user = user;
     //skip intro text for repeat users
-    if (user.address && this.query.status === NEW_QUERY){
+    if ((user.previous && this.query.status === NEW_QUERY ) 
+      || this.query.status === COMPLETED){
       this.query.status = AWAIT_SERVICE;
     }
   }
@@ -90,7 +91,7 @@ class Converser{
 
   confirmAddress(text){
     if (text.includes("y")){
-      this.query.address = this.user.address;
+      this.query.address = this.user.previous;
       return this.fulfillQuery();
     } else { // user does not want to use cached address
       let promise = new Promise((resolve, reject) => {
@@ -106,9 +107,9 @@ class Converser{
 
   addressQuery(useCachedAddress = true){
     let message;
-    if (useCachedAddress && this.user.address){
+    if (useCachedAddress && this.user.previous){
       this.query.status = CONFIRMING_ADDRESS;
-      message =  "I have your last location as: " + this.user.address + ". Is that still correct?";
+      message =  "I have your last location as: " + this.user.previous + ". Is that still correct?";
     } else{
       this.query.status = AWAIT_ADDRESS;
       message = "Where are you right now? (ex. 587 Eddy St. San Francisco)";
