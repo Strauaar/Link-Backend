@@ -36,7 +36,7 @@ class GoogleMap {
     let query = "homeless" + this.type;
     let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}s&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
     let body = '';
-    
+
     let promise = new Promise( (resolve, reject) => {
       let response;
       https.get(url, resp => {
@@ -64,7 +64,6 @@ class GoogleMap {
 
 
 
-let g = new GoogleMap("shelter", "5asdf87 edasdfdy st sf");
-console.log(g);
-g.validAddress().then(res => console.log(res));
-g.getText().then(res => console.log(res));
+// let g = new GoogleMap("shelter", "587 eddy st sf");
+// console.log(g);
+// g.getText().then(res => console.log(res));
