@@ -5,7 +5,9 @@ class NLP{
   }
 
   sendReq(){
-    const client = new language.LanguageServiceClient();
+    const client = new language.LanguageServiceClient({
+      keyFilename: './service_key.json'
+    });
 
     const document = {
       content: this.message,
