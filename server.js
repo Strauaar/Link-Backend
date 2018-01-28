@@ -47,24 +47,28 @@ app.post('/sms', (req, res) => {
     if (err) {
       throw err
     } else if (r.rows.length === 0) {
-      console.log(r);
-      let converser = new Converser();
-      converser.receiveText(body)
-      .then(data => {
-        let toSend = data.message;
-        let newQuery = data.query;
-        console.log(newQuery);
-        const { service, address, status } = newQuery;
-        db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
-          .then(res3 => {console.log(res3)})
-          .catch(e => console.error(e.stack));
-        let twiml = new MessagingResponse();
-        console.log(toSend);
-        twiml.message(toSend);
-        res.writeHead(200, {'Content-Type': 'text/xml'});
-        res.end(twiml.toString());
+      db.query('SELECT id FROM users WHERE number = ($1);', [number])
+        .then(res5 => {
+          console.log(res5);
+          let converser = new Converser();
+          converser.receiveText(body)
+          .then(data => {
+            let toSend = data.message;
+            let newQuery = data.query;
+            console.log(newQuery);
+            const { service, address, status } = newQuery;
+            db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
+              .then(res3 => {console.log(res3)})
+              .catch(e => console.error(e.stack));
+            let twiml = new MessagingResponse();
+            console.log(toSend);
+            twiml.message(toSend);
+            res.writeHead(200, {'Content-Type': 'text/xml'});
+            res.end(twiml.toString());
+          })
+          .catch(e1 => console.error(e1.stack))
       })
-      .catch(e => console.error(e.stack))
+      .catch(e2 => console.error(e2.stack))
     } else {
       console.log('r',r);
       let row = r.rows[0];
