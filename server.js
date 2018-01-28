@@ -72,6 +72,7 @@ app.post('/sms', (req, res) => {
     } else {
       console.log('r',r);
       let row = r.rows[0];
+      console.log('rows', row);
       let query = { service: row['service'], address: row['address'], status: row['status'] };
       let converser = new Converser(query);
       converser.receiveText(body)
