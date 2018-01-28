@@ -78,13 +78,14 @@ app.post('/sms', (req, res) => {
   //     //   res.end(twiml.toString());
   //     // })
   //     // .catch(e => console.error(e.stack))
-  //     // let twiml = new MessagingResponse();
-  //     // twiml.message('The Robots are coming! Head for the hills!');
-  //     // res.writeHead(200, {'Content-Type': 'text/xml'});
-  //     // res.end(twiml.toString());
+
   //   }
   //   db.end();
   // });
+  let twiml = new MessagingResponse();
+  twiml.message('The Robots are coming! Head for the hills!');
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
 });
 
 // Endpoint for web app to grab 20 shelters or soup kitchens in SF
