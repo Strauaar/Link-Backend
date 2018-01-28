@@ -7,6 +7,7 @@ const https = require("https");
 const { Client } = require('pg');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const Converser = require("./converser.js");
+const defaultQuery = {service: null, address: null};
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 // client.messages
@@ -25,22 +26,6 @@ const db = new Client({
 
 db.connect();
 
-const newUser = (number) => {
-    db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date() ], (err, res) => {
-    if (err) throw err;
-    db.end();
-  });
-};
-
-const getStatus = () => {
-    db.query('SELECT status FROM queries JOIN users ON users.id = queries.user_id;',(err, res) => {
-    if (err) throw err;
-    console.log(res)
-    db.end();
-  });
-};
-
-
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -55,8 +40,19 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  this.newUser(number);
-  this.getStatus();
+
+  //insert new user
+  db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date() ], (err, res) => {
+    if (err) throw err;
+    db.end();
+  });
+
+  //get status
+  db.query('SELECT status FROM queries JOIN users ON users.id = queries.user_id;',(err, res) => {
+  if (err) throw err;
+    console.log(res)
+    db.end();
+  });
   // TODO: Check db for query status
   // Base on status, either send "Location?" text
   // or query results for services near user
