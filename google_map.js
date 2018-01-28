@@ -6,7 +6,6 @@ class GoogleMap {
     this.type = type;
     this.address = address;
     this.API_KEY = process.env.GOOGLE_API_KEY;
-    console.log(this.API_KEY);
   }
 
   validAddress() {
@@ -36,7 +35,6 @@ class GoogleMap {
 
   getText() {
     let query = "homeless " + this.type.join(" ");
-    console.log(query);
     // let query = this.type;
     let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}&key=${this.API_KEY}`;
     let body = '';
@@ -72,6 +70,3 @@ class GoogleMap {
 
 module.exports = GoogleMap;
 
-// let g = new GoogleMap("shelter", "587 eddy st sf");
-// console.log(g);
-// g.getText().then(res => console.log(res));
