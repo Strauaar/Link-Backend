@@ -110,6 +110,24 @@ app.get('/locations/:type', function (req, res) {
   });
 });
 
+app.get('/setup', function(){
+  const api_url = process.env.PROCCESS_KEY_URL;
+  let body = '';
+  http.get(url, resp => {
+    resp.on("data", data => {
+      body += data;
+    });
+    resp.on("end", () => {
+      fs.writeFile("./service_key.json", body, function(err) {
+        if(err) {
+          return console.log(err);
+        }
+        console.log("The file was saved!");
+      }); 
+    });
+  });
+})
+
 app.get('/location_detailed/:placeid', function (req, res) {
   let placeid = req.params.placeid;
   let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_API_KEY}

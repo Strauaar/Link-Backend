@@ -1,23 +1,25 @@
 const Converser = require("./converser.js");
 const readline = require('readline');
+const http = require("http");
 const defaultQuery = {service: null, address: null};
-
+var fs = require('fs');
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
-// const user = {address: "sf"}
+
+const user = {address: "1950 Mission St."};
 
 function getInput(query){
-  let converser = new Converser(query);
+  let converser = new Converser(query, user);
   rl.question('> ', input => {
     converser.receiveText(input).then((response) => {
       //save query to DB
       //response ==> {query: {}, message: "TEXT ME TO USER"}
       query = response.query;
       console.log(response.message);
-      getInput(query);
+      getInput(query); 
     });
   });
 }
