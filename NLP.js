@@ -3,7 +3,6 @@ const language = require('@google-cloud/language');
 class NLP{
   constructor(message){
     this.message = message;
-    this.KEY = "AIzaSyCL71w0JZohA6wO2PAXFEb9PJN6_vTs3oA";
   }
 
   sendReq(){
