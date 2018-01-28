@@ -47,6 +47,7 @@ app.post('/sms', (req, res) => {
     if (err) {
       throw err
     } else if (r.rows.length === 0) {
+      console.log(r);
       let converser = new Converser();
       converser.receiveText(body)
       .then(data => {
