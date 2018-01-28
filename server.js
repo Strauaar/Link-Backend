@@ -76,7 +76,7 @@ app.get('/locations/:type', function (req, res) {
   let address = "san francisco";
   let query = "homeless " + type;
   console.log(query);
-  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${API_KEY}
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${GOOGLE_API_KEY}
 `;
   let body = '';
 
@@ -93,7 +93,7 @@ app.get('/locations/:type', function (req, res) {
 
 app.get('/location_detailed/:placeid', function (req, res) {
   let placeid = req.params.placeid;
-  let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${API_KEY}
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${GOOGLE_API_KEY}
 `;
   let body = '';
 
@@ -112,7 +112,7 @@ app.get('/:type/:address', function (req, res) {
   let type = req.params.type;
   let address = req.params.address;
   let query = "homeless" + type;
-  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${API_KEY}
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${GOOGLE_API_KEY}
 `;
   let body = '';
 
