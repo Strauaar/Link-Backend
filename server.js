@@ -83,6 +83,7 @@ app.post('/sms', (req, res) => {
       // res.end(twiml.toString());
     }
   db.end();
+  });
 });
 
 // Endpoint for web app to grab 20 shelters or soup kitchens in SF
