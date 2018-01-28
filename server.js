@@ -124,7 +124,7 @@ app.get('/locations/:type', function (req, res) {
 app.get('/setup', (req, res) => {
   const api_url = process.env.PROCCESS_KEY_URL;
   let body = '';
-  http.get(url, resp => {
+  http.get(api_url, resp => {
     resp.on("data", data => {
       body += data;
     });
