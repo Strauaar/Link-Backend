@@ -39,7 +39,11 @@ app.post('/sms', (req, res) => {
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
   DBUtil.newUser(number);
-  
+  DBUtil.getStatus();
+  // TODO: Check db for query status
+  // Base on status, either send "Location?" text
+  // or query results for services near user
+
   let twiml = new MessagingResponse();
   twiml.message('The Robots are coming! Head for the hills!');
 
