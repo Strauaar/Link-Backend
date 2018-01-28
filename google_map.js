@@ -6,6 +6,7 @@ class GoogleMap {
     this.type = type;
     this.address = address;
     this.API_KEY = process.env.GOOGLE_API_KEY;
+    console.log(this.API_KEY);
   }
 
   validAddress() {
@@ -37,7 +38,7 @@ class GoogleMap {
     let query = "homeless " + this.type.join(" ");
     console.log(query);
     // let query = this.type;
-    let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}&key=AIzaSyCL71w0JZohA6wO2PAXFEb9PJN6_vTs3oA`;
+    let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.address}+${query}&key=${this.API_KEY}`;
     let body = '';
 
     let promise = new Promise( (resolve, reject) => {
@@ -58,8 +59,8 @@ class GoogleMap {
             // response = `Nearest ${this.type} are ${nearest.name} at ${nearest.formatted_address}; ${second.name} at ${second.formatted_address}; and ${third.name} at ${third.formatted_address}`;
             const results = body.results.slice(0,3);
             const resultsString = results.map(result => (`${result.name} at ${result.formatted_address}`))
-              .join("; ");
-            response = `Nearest ${this.type} are ${resultsString}`;
+              .join(";\n ");
+            response = `Nearest ${this.type} are: \n ${resultsString}`;
           }
           resolve(response);
         });
