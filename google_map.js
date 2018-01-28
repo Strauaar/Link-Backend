@@ -7,6 +7,31 @@ class GoogleMap {
     this.address = address;
   }
 
+  validAddress() {
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.address}&key=AIzaSyDQMiVYKqb3VfNq8dP3C_sXxChtimg9zB8`
+    let body = '';
+
+    let promise = new Promise((resolve, reject) => {
+      let response;
+      https.get(url, resp => {
+        resp.on("data", data => {
+          body += data;
+        });
+        resp.on("end", () => {
+          body = JSON.parse(body);
+
+          if (body.status === "ZERO_RESULTS") {
+            response = false;
+          } else {
+            response = true;
+          }
+          resolve(response);
+        });
+      });
+    });
+    return promise;
+  }
+
   getText() {
     let query = "homeless " + this.type.join(" ");
     console.log(query);
