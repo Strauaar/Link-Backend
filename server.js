@@ -23,6 +23,14 @@ const app = express();
 // });
 //
 // db.connect();
+const { Client } = require('pg');
+
+const db = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true
+});
+
+db.connect();
 
 app.use(bodyParser.urlencoded({
   extended: true
