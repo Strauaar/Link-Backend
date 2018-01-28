@@ -3,7 +3,7 @@ const GoogleMap = require("./google_map");
 const Promise = require("es6-promise");
 
 const sampleTexts = "'I am looking for a homeless shelter' or  'I need drug counseling'";
-// STATUSES 
+// STATUSES
 const FILLING_QUERY = "FILLING_QUERY";
 const CONFIRMING_ADDRESS = "CONFIRMING_ADDRESS";
 
@@ -14,14 +14,9 @@ class Converser{
     this.query = query;
     this.user = user;
   }
-<<<<<<< HEAD
 
-  receiveText(){
 
-  }
-=======
->>>>>>> 7b6e6bb53c7ce0c4b353a9bf373c8b4254a544ec
-  
+
   receiveText(text){
     if (this.query === defaultQuery){
       return this.receiveService(text);
