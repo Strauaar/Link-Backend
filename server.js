@@ -59,7 +59,6 @@ app.post('/sms', (req, res) => {
           .catch(e => console.error(e.stack));
         let twiml = new MessagingResponse();
         console.log(toSend);
-        db.end();
         twiml.message(toSend);
         res.writeHead(200, {'Content-Type': 'text/xml'});
         res.end(twiml.toString());
@@ -78,7 +77,6 @@ app.post('/sms', (req, res) => {
         const { service, address, status } = converser.query;
         db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
           .catch(e => console.error(e.stack))
-        db.end();
         twiml.message(toSend);
         res.writeHead(200, {'Content-Type': 'text/xml'});
         res.end(twiml.toString());
