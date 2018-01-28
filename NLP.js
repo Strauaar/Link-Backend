@@ -26,15 +26,13 @@ class NLP{
       .then(
         response =>{
           let entities = response[0].entities.map(entity => entity.name);
-          console.log(entities);
-        resolve(entities);
-      },
+          resolve(entities);
+        },
       errors => reject(errors));
     });
     return promise;
   }
 }
-
 
 module.exports = NLP;
 // const post = new NLP("I am looking for a soup kitchen");
