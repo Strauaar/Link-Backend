@@ -21,12 +21,29 @@ class Converser{
     if (this.query === defaultQuery){
       return this.receiveService(text);
     } else if (!this.query.address){
-      return this.receive
+      return this.receiveAddress(text);
     } else if (this.query.status === CONFIRMING_ADDRESS){
       return this.fulfillQuery();
     }
   }
 
+  receiveService(text){
+    let response;
+    let promise = new Promise((resolve, reject) => {
+      if (!this.query["service"]){
+        const parser = new NLP(text);
+        parser.parseService().then(entities => {
+          if (this.handleEntites(entities)){
+            response = "Where are you currently? (ex. 587 Eddy St.)";
+            // save to DB
+          } else{
+            response = "Sorry, I wasn't able to understand that. Try " + sampleTexts;
+          }
+            console.log(response);
+        });
+      }
+    });
+  }
   // receiveText(text){
   //   let response;
   //   let promise = new Promise((resolve, reject) => {
