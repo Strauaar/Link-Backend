@@ -47,7 +47,7 @@ app.post('/sms', (req, res) => {
       // db.query('SELECT id FROM users WHERE ')
       console.log(res);
     })
-    .catch(e => console.error(e.stack);)
+    .catch(e => console.error(e.stack))
 
   //get status
   db.query('SELECT users.id,status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
