@@ -35,6 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/sms', (req, res) => {
+  console.log('ASDASDASD');
   const body = req.body.Body;
   const number = req.body.From;
 
