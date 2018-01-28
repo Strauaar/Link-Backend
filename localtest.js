@@ -9,7 +9,8 @@ const rl = readline.createInterface({
 });
 
 
-const user = {address: "1950 Mission St."};
+const user = {};
+// const user = {address: "1950 Mission St."};
 
 function getInput(query){
   let converser = new Converser(query, user);
