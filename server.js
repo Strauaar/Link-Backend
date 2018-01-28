@@ -1,7 +1,6 @@
 import { ACCOUNT_SID, AUTH_TOKEN } from './api_keys.js';
 import express from 'express';
 import bodyParser from 'body-parser';
-import * as DBUtil from './db_util.js';
 const http = require('http');
 const https = require("https");
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -31,6 +30,8 @@ const db = new Client({
 });
 
 db.connect();
+import * as DBUtil from './db_util.js';
+
 
 app.use(bodyParser.urlencoded({
   extended: true
