@@ -41,34 +41,52 @@ app.post('/sms', (req, res) => {
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
 
-  //insert new user
   db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
     .catch(e => console.error(e.stack));
 
-  db.query('SELECT id FROM users WHERE number = ($1);', [number])
-    .then(res => {
-      console.log(res);
-    });
-
-  //get status
-  db.query('SELECT users.id,status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
-    if (err) throw err
-    if (res.rows.length === 0) {
-
-      console.log('it was null');
+  db.query('SELECT * FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
+    if (err) {
+      throw err
+    } else if (res.rows.length === 0) {
+      let converser = new Converser();
+      converser.receiveText(body)
+      .then(res => {
+        let toSend = res.text;
+        let newQuery = res.query;
+        let twiml = new MessagingResponse();
+        twiml.message(toSend);
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
+        const { service, address, status } = converser.query;
+        db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
+        .catch(e => console.error(e.stack))
+      })
+      .catch(e => console.error(e.stack))
+    } else {
+      let row = res.row[0]
+      let query = {row['service'], row['address'], row['status']};
+      let converser = new Converser(query);
+      converser.receiveText(body)
+      .then(res => {
+        let toSend = res.text;
+        let newQuery = res.query;
+        let twiml = new MessagingResponse();
+        twiml.message(toSend);
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
+        const { service, address, status } = converser.query;
+        db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number], [service, address, status])
+          .catch(e => console.error(e.stack))
+      })
+      .catch(e => console.error(e.stack))
+      // let twiml = new MessagingResponse();
+      // twiml.message('The Robots are coming! Head for the hills!');
+      // res.writeHead(200, {'Content-Type': 'text/xml'});
+      // res.end(twiml.toString());
     }
-    // console.log(res);
     db.end();
   });
-  // TODO: Check db for query status
-  // Base on status, either send "Location?" text
-  // or query results for services near user
 
-  let twiml = new MessagingResponse();
-  twiml.message('The Robots are coming! Head for the hills!');
-
-  res.writeHead(200, {'Content-Type': 'text/xml'});
-  res.end(twiml.toString());
 
 });
 
