@@ -1,4 +1,4 @@
-import { ACCOUNT_SID, AUTH_TOKEN } from './api_keys.js';
+import { ACCOUNT_SID, AUTH_TOKEN, GOOGLE_API_KEY } from './api_keys.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 // import * as DBUtil from './db_util.js';
@@ -17,7 +17,6 @@ const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 //     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
 //   })
 //   .then(message => console.log(message.sid));
-const API_KEY = process.env.GOOGLE_API_KEY;
 
 const app = express();
 const db = new Client({
@@ -52,7 +51,7 @@ app.post('/sms', (req, res) => {
   //get status
   db.query('SELECT status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
     if (err) throw err;
-    console.log(res.rows.length);
+    console.log(res);
     db.end();
   });
   // TODO: Check db for query status
