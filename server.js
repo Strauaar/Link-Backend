@@ -14,6 +14,7 @@ const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 //     body: 'This is the ship that made the Kessel Run in fourteen parsecs?',
 //   })
 //   .then(message => console.log(message.sid));
+const API_KEY = process.env.GOOGLE_API_KEY;
 
 const app = express();
 const db = new Client({
@@ -64,7 +65,8 @@ app.get('/locations/:type', function (req, res) {
   let address = "san francisco";
   let query = "homeless " + type;
   console.log(query);
-  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${API_KEY}
+`;
   let body = '';
 
   https.get(url, resp => {
@@ -81,7 +83,8 @@ app.get('/locations/:type', function (req, res) {
 // Returns
 app.get('/location_detailed/:placeid', function (req, res) {
   let placeid = req.params.placeid;
-  let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeid}&key=${API_KEY}
+`;
   let body = '';
 
   https.get(url, resp => {
@@ -99,7 +102,8 @@ app.get('/:type/:address', function (req, res) {
   let type = req.params.type;
   let address = req.params.address;
   let query = "homeless" + type;
-  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=AIzaSyBCVhmLyklsarcKC9WCVH12rEhjemNNxKw`;
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${address}+${query}s&key=${API_KEY}
+`;
   let body = '';
 
   https.get(url, resp => {
