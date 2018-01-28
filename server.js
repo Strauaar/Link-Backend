@@ -55,7 +55,8 @@ app.post('/sms', (req, res) => {
         console.log(newQuery);
         const { service, address, status } = newQuery;
         db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
-        .catch(e => console.error(e.stack));
+          .then(res3 => {console.log(res3)})
+          .catch(e => console.error(e.stack));
         let twiml = new MessagingResponse();
         console.log(toSend);
         twiml.message(toSend);
