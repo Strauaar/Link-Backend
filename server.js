@@ -63,22 +63,22 @@ app.post('/sms', (req, res) => {
       })
       .catch(e => console.error(e.stack))
     } else {
-      // let row = r.row[0];
-      // let query = {row['service'], row['address'], row['status']};
-      // let converser = new Converser(query);
-      // converser.receiveText(body)
-      // .then(data => {
-      //   let toSend = data.message;
-      //   let newQuery = data.query;
-      //   let twiml = new MessagingResponse();
-      //   const { service, address, status } = converser.query;
-      //   db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
-      //     .catch(e => console.error(e.stack))
-      //   twiml.message(toSend);
-      //   res.writeHead(200, {'Content-Type': 'text/xml'});
-      //   res.end(twiml.toString());
-      // })
-      // .catch(e => console.error(e.stack))
+      let row = r.row[0];
+      let query = {row['service'], row['address'], row['status']};
+      let converser = new Converser(query);
+      converser.receiveText(body)
+      .then(data => {
+        let toSend = data.message;
+        let newQuery = data.query;
+        let twiml = new MessagingResponse();
+        const { service, address, status } = converser.query;
+        db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
+          .catch(e => console.error(e.stack))
+        twiml.message(toSend);
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
+      })
+      .catch(e => console.error(e.stack))
 
     }
     db.end();
