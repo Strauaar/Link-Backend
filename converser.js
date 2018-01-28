@@ -25,19 +25,48 @@ class Converser{
   }
 
   receiveText(text){
-    // user is new user
-    if (this.query.status === NEW_QUERY){
-      return this.sendIntroText();
-    } else if (this.query.status === AWAIT_SERVICE){
-      return this.receiveService(text);
-    } else if (this.query.status === AWAIT_ADDRESS){
-      return this.receiveAddress(text);
-    } else if (this.query.status === CONFIRMING_ADDRESS ){
-      return this.confirmAddress(text);
-      // should never get here
-    } else {
+    const actions = {
+      NEW_QUERY: this.sendIntroText,
+      AWAIT_SERVICE: this.receiveService,
+      AWAIT_ADDRESS: this.receiveAddress,
+      CONFIRMING_ADDRESS: this.confirmAddress
+    };
+    if (this.checkForTriggers(text)){
+      return this.handleTrigger();
+    } 
+    const status = this.query.status;
+    if (status){
+      return actions[status](text);
+    } else{
       return this.sendIntroText();
     }
+    //   else if (this.query.status === NEW_QUERY){
+    //   return this.sendIntroText();
+    // } else if (this.query.status === AWAIT_SERVICE){
+    //   return this.receiveService(text);
+    // } else if (this.query.status === AWAIT_ADDRESS){
+    //   return this.receiveAddress(text);
+    // } else if (this.query.status === CONFIRMING_ADDRESS ){
+    //   return this.confirmAddress(text);
+      // should never get here
+    // } else {
+    //   return this.sendIntroText();
+    // }
+  }
+  checkForTriggers(text){
+    console.log(text);
+    const triggers = ["suicide", "death", "dead", "kill", " die "];
+    return triggers.some(trigger => (
+      text.includes(trigger)
+    ));
+  }
+  handleTrigger(){
+    let promise = new Promise((resolve, reject) => {
+      const message = "Help is just a phone call away. Call 1-800-273-8255 now for 24/7 support";
+      this.query.status = COMPLETED;
+      resolve({query: this.query, message });
+    });
+    return promise;
   }
 
   sendIntroText(){
@@ -54,7 +83,7 @@ class Converser{
     let promise = new Promise((resolve, reject) => {
       const parser = new NLP(text);
       parser.parseService().then(entities => {
-        if (this.handleEntites(entities)){            
+        if (this.handleEntities(entities)){            
           message = this.addressQuery();
           // save to DB
         } else{
@@ -67,7 +96,6 @@ class Converser{
   }
 
   receiveAddress(text){
-    console.log(text);
     this.query.address = text;
     return this.fulfillQuery();
   }
@@ -114,10 +142,10 @@ class Converser{
     return promise;
   }
 
-  handleEntites(entities){
+  handleEntities(entities){
     if (entities.length > 0){
     //  this.query["service"] = entities[0];
-     this.query["service"] = entities;
+     this.query["service"] = entities.join(" ");
      return true;
     } else{
       return false;

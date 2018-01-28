@@ -8,6 +8,8 @@ class GoogleMap {
     this.API_KEY = process.env.GOOGLE_API_KEY;
   }
 
+
+
   validAddress() {
     let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.address}&key=${this.API_KEY}`;
     let body = '';
@@ -34,11 +36,10 @@ class GoogleMap {
   }
 
   getText() {
-    let query = this.address + " homeless " + this.type.join(" ");
+    let query = this.address + " homeless " + this.type.join;
     // let query = this.type;
     let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${this.API_KEY}`;
     let body = '';
-    console.log(url);
     let promise = new Promise( (resolve, reject) => {
       let response;
       https.get(url, resp => {
@@ -48,7 +49,7 @@ class GoogleMap {
         resp.on("end", () => {
           body = JSON.parse(body);
           if (body.status === "ZERO_RESULTS") {
-            response = "No results found";
+            response = `Sorry, we can't find any ${this.type} near ${this.address}`;
           } else {
             const results = body.results.slice(0,3);
             const resultsString = results.map(result => (`${result.name} at ${result.formatted_address}`))
