@@ -43,14 +43,12 @@ app.post('/sms', (req, res) => {
 
   //insert new user
   db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
-    .then(() => {
-      db.query('SELECT id FROM users WHERE number = ($1);', [number])
-        .then(res => {
-          console.log(res);
-        });
+    .catch(e => console.error(e.stack));
 
-    })
-    .catch(e => console.error(e.stack))
+  db.query('SELECT id FROM users WHERE number = ($1);', [number])
+    .then(res => {
+      console.log(res);
+    });
 
   //get status
   db.query('SELECT users.id,status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
