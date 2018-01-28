@@ -49,7 +49,7 @@ app.post('/sms', (req, res) => {
     } else if (r.rows.length === 0) {
       db.query('SELECT id FROM users WHERE number = ($1);', [number])
         .then(res5 => {
-          console.log(res5[0].id);
+          console.log(res5[0]);
           let converser = new Converser();
           converser.receiveText(body)
           .then(data => {
