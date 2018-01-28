@@ -55,8 +55,8 @@ app.post('/sms', (req, res) => {
   const body = req.body.Body;
   //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
-  newUser(number);
-  getStatus();
+  this.newUser(number);
+  this.getStatus();
   // TODO: Check db for query status
   // Base on status, either send "Location?" text
   // or query results for services near user
