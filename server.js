@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 const { Client } = require('pg');
 const http = require('http');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-
+const Converser = require("./converser.js");
 const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 // client.messages
 //   .create({
@@ -30,7 +30,14 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('hi');
 });
-
+// 
+// function getInput(query){
+//   let converser = new Converser(query);
+//   converser.receiveText(input).then(response => {
+//     query = response;
+//     getInput(query);
+//   });
+// };
 
 app.post('/sms', (req, res) => {
   //text body
@@ -42,7 +49,7 @@ app.post('/sms', (req, res) => {
     db.end();
   });
 
-  // console.log(req);
+
   let twiml = new MessagingResponse();
 
   twiml.message('The Robots are coming! Head for the hills!');
