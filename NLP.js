@@ -1,5 +1,5 @@
 const language = require('@google-cloud/language');
-
+const GOOGLE_APPLICATION_CREDENTIALS = 
 class NLP{
   constructor(message){
     this.message = message;
