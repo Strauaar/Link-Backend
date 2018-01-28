@@ -36,9 +36,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/sms', (req, res) => {
-  //text body
   const body = req.body.Body;
-  //number is in string format '+1XXXXXXXXXX'
   const number = req.body.From;
 
   db.query('INSERT INTO users (number, created_at) VALUES ($1, $2) ON CONFLICT (number) DO NOTHING;', [number, new Date()])
@@ -54,12 +52,12 @@ app.post('/sms', (req, res) => {
         let toSend = res.text;
         let newQuery = res.query;
         let twiml = new MessagingResponse();
-        twiml.message(toSend);
-        res.writeHead(200, {'Content-Type': 'text/xml'});
-        res.end(twiml.toString());
         const { service, address, status } = converser.query;
         db.query('INSERT INTO queries (service, address, status ) VALUES ($1, $2, $3);', [service, address, status])
         .catch(e => console.error(e.stack))
+        twiml.message(toSend);
+        res.writeHead(200, {'Content-Type': 'text/xml'});
+        res.end(twiml.toString());
       })
       .catch(e => console.error(e.stack))
     } else {
@@ -71,12 +69,12 @@ app.post('/sms', (req, res) => {
         let toSend = res.text;
         let newQuery = res.query;
         let twiml = new MessagingResponse();
+        const { service, address, status } = converser.query;
+        db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number])
+          .catch(e => console.error(e.stack))
         twiml.message(toSend);
         res.writeHead(200, {'Content-Type': 'text/xml'});
         res.end(twiml.toString());
-        const { service, address, status } = converser.query;
-        db.query('UPDATE queries SET service = ($1), address = ($2), status = ($3) WHERE user_id IN (SELECT id FROM users WHERE number = ($4));', [service, address, status, number], [service, address, status])
-          .catch(e => console.error(e.stack))
       })
       .catch(e => console.error(e.stack))
       // let twiml = new MessagingResponse();
@@ -84,10 +82,7 @@ app.post('/sms', (req, res) => {
       // res.writeHead(200, {'Content-Type': 'text/xml'});
       // res.end(twiml.toString());
     }
-    db.end();
-  });
-
-
+  db.end();
 });
 
 // Endpoint for web app to grab 20 shelters or soup kitchens in SF
