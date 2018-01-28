@@ -5,10 +5,11 @@ class GoogleMap {
   constructor(type, address) {
     this.type = type;
     this.address = address;
+    this.API_KEY = process.env.GOOGLE_API_KEY;
   }
 
   validAddress() {
-    let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.address}&key=AIzaSyDQMiVYKqb3VfNq8dP3C_sXxChtimg9zB8`
+    let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${this.address}&key=${this.API_KEY}`;
     let body = '';
 
     let promise = new Promise((resolve, reject) => {

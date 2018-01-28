@@ -16,7 +16,6 @@ function getInput(query){
     });
   });
 }
-// getInput({service: "doctor", address: null});
 getInput();
 
 // export GOOGLE_APPLICATION_CREDENTIALS=/"/Users/julian/Desktop/hackathon/service_key.json" 
