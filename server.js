@@ -51,6 +51,9 @@ app.post('/sms', (req, res) => {
   //get status
   db.query('SELECT status FROM queries JOIN users ON users.id = queries.user_id WHERE users.number = ($1);', [number], (err, res) => {
     if (err) throw err;
+    if (res.old === null) {
+      console.log('it was null');
+    }
     console.log(res);
     db.end();
   });
