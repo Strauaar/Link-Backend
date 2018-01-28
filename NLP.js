@@ -22,15 +22,20 @@ class NLP{
   }
 
   parseService(){
+    let promise = new Promise((resolve, reject) =>{
     this.sendReq()
-    .then(response =>{
-      const entities = response[0].entities.map(entity => entity.name);
-      return entities;
+      .then(
+        response =>{
+        let entities = response[0].entities.map(entity => entity.name);
+        resolve(entities);
+      },
+      errors => reject(errors));
     });
+    return promise;
   }
 }
 
 
-
-const post = new NLP("I am looking for a soup kitchen");
-post.parseService();
+module.exports = NLP;
+// const post = new NLP("I am looking for a soup kitchen");
+// post.parseService();
