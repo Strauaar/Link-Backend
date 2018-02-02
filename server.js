@@ -120,6 +120,7 @@ app.get('/locations/:type', function (req, res) {
   });
 });
 
+//to run setup
 app.get('/setup', (req, res) => {
   const api_url = process.env.PROCCESS_KEY_URL;
   let body = '';
